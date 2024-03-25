@@ -1,8 +1,8 @@
 import CredentialsProvider from "next-auth/providers/credentials";
 import {login} from "@/lib/admin";
-import {uuidv4} from "@firebase/util";
 import {DashboardResponseType, LoginPostResponseType} from "@/types/admin-api";
 import {NextAuthOptions} from "next-auth";
+import {v4 as uuidv4} from 'uuid';
 
 
 export const nextAuthOptions: NextAuthOptions = {
