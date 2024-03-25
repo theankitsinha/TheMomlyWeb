@@ -5,6 +5,7 @@ export default withAuth({
         signIn: '/login',
         signOut: '/logout',
         error: '/login',
+        
     },
 });
 export const config = {
