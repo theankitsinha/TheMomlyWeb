@@ -1,11 +1,10 @@
 import CredentialsProvider from "next-auth/providers/credentials";
 import {login} from "@/lib/admin";
 import {DashboardResponseType, LoginPostResponseType} from "@/types/admin-api";
-import {NextAuthOptions} from "next-auth";
 import {v4 as uuidv4} from 'uuid';
 
 
-export const nextAuthOptions: NextAuthOptions = {
+export const nextAuthOptions = {
     session: {
         maxAge: 6 * 60 * 60 // 4 hours
     },
