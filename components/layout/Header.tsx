@@ -31,6 +31,7 @@ function Header() {
                     <Link href="/public" className="mr-2 hidden md:inline-block">
                         <Image
                             src="/assets/logo.svg"
+                            priority
                             width={200}
                             height={200}
                             layout="fixed"
@@ -40,6 +41,7 @@ function Header() {
                     <Link href="/public" className="inline-block md:hidden">
                         <Image
                             src="/assets/logo.svg"
+                            priority
                             width={200}
                             height={200}
                             layout="fixed"
@@ -82,9 +84,10 @@ function Header() {
                     )}
                     <li>
                         <div
+                            onClick={() => signOut()}
                             className="text-xl grid place-items-center bg-gray-200 dark:bg-dark-third dark:text-dark-txt rounded-full mx-1 p-3 cursor-pointer hover:bg-gray-300 relative">
-                            <IoIosLogOut onClick={() => signOut()}
-                                         className="w-5 h-auto cursor-pointer hover:text-primary"/>
+                            <IoIosLogOut
+                                className="w-5 h-auto cursor-pointer hover:text-primary"/>
                         </div>
                     </li>
                 </ul>

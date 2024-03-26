@@ -2,6 +2,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import {login} from "@/lib/admin";
 import {DashboardResponseType, LoginPostResponseType} from "@/types/admin-api";
 import {v4 as uuidv4} from 'uuid';
+import {extractUserIdAndUUID, uuidValidateV4} from "@/lib/utils";
 
 
 export const nextAuthOptions = {
@@ -19,17 +20,19 @@ export const nextAuthOptions = {
         //     clientSecret: process.env.APPLE_SECRET ?? '',
         // }),
         CredentialsProvider({
-            name: "Credentials",
+            name: 'credentials',
             credentials: {
+                token: {
+                    label: "token:",
+                    type: "text",
+                },
                 email: {
                     label: "email:",
                     type: "text",
-                    placeholder: "your-email",
                 },
                 password: {
                     label: "password:",
                     type: "password",
-                    placeholder: "your-password",
                 },
             },
             //@ts-ignore
@@ -41,7 +44,19 @@ export const nextAuthOptions = {
                     }));
                 }
                 const deviceId = uuidv4();
-                const response = await login(credentials.email, credentials.password, deviceId, "password");
+                let tokenUserId = null;
+                if (credentials.token) {
+                    const {userId, uuid} = extractUserIdAndUUID(credentials.token);
+                    if (uuidValidateV4(uuid ?? '')) {
+                        tokenUserId = userId;
+                    }
+                }
+                const response = await login(
+                    credentials.email,
+                    credentials.password,
+                    deviceId,
+                    tokenUserId,
+                    tokenUserId ? "qrcode" : "password");
                 if (response.ok) {
                     const res: LoginPostResponseType = await response.json();
                     if (!res.status) {
@@ -52,9 +67,10 @@ export const nextAuthOptions = {
                     }
                     return res.data;
                 } else {
-                    console.log("Auth error!", await response.json())
+                    const errorMessage = await response.json()
+                    console.log("Auth error!", errorMessage)
                     throw new Error(JSON.stringify({
-                        errors: 'Invalid credentials',
+                        errors: errorMessage.message ?? 'Invalid credentials',
                         status: false
                     }));
                 }

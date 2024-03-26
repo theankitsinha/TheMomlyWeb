@@ -20,3 +20,9 @@ export function decryptData(encryptedData: EncryptedObject, algorithm: string = 
     const decryptedData = decipher.update(encryptedData.data, "hex", "utf8") + decipher.final("utf8");
     return JSON.parse(decryptedData);
 }
+
+export function getQrDataHash() {
+    const token = crypto.randomBytes(64).toString('hex');
+    let channel_data = new Date().getDate() + "-" + new Date().getMonth() + "-" + new Date().getMinutes()
+    return crypto.createHash('md5').update(channel_data + "||" + token).digest("hex");
+}

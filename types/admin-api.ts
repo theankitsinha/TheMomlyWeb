@@ -23,7 +23,7 @@ export type DashboardResponseType = {
     username_visibility: boolean
     username: string
     phone_extension: string
-    phone_number: string
+    phone_number: any
     is_approved: boolean
     email: string
     created_at: string
@@ -31,7 +31,8 @@ export type DashboardResponseType = {
     login: Login
     profile: Profile
     isSubscriptionUser: boolean
-    children: Children[]
+    children: any[]
+    roles: Role[]
 }
 
 export interface Login {
@@ -49,14 +50,14 @@ export interface Login {
 export interface Profile {
     id: number
     bio: string
-    bio_link: any
-    pincode: any
+    bio_link: string
+    pincode: string
     gender: string
     avatar: string
     avatar_thumbnail: string
     lat: string
     long: string
-    state_of_mind: any
+    state_of_mind: string
     reason_to_join: string
     describes_me: any
     address: string
@@ -69,26 +70,27 @@ export interface Profile {
     dob: string
     languages: string[]
     education: string
-    work: any
-    hometown: any
+    work: string
+    hometown: string
     hobbies: any
     updated_at: string
     user_id: number
     current_stage_id: number
-    children_stage_id: number
+    children_stage_id: any
 }
 
-export interface Children {
+export interface Role {
     id: number
-    gender: string
-    dob: string
-    name: string
-    created_at: string
-    updated_at: string
+    title: string
+    created_at?: string
+    updated_at?: string
     deleted_at: any
+    pivot: Pivot
+}
+
+export interface Pivot {
     user_id: number
-    children_stage_id: number
-    recommended_stage_id: any
+    role_id: number
 }
 
 

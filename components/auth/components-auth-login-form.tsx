@@ -16,7 +16,7 @@ export default function ComponentsAuthLoginForm() {
     });
     const [error, setError] = useState("");
     const searchParams = useSearchParams();
-    const callbackUrl = searchParams.get("callbackUrl") || "/";
+    const callbackUrl = searchParams!.get("callbackUrl") || "/";
     const onSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
@@ -58,7 +58,7 @@ export default function ComponentsAuthLoginForm() {
                            value={formValues.email}
                            onChange={handleChange}
                            className=" ps-10"/>
-                    <span className="absolute start-4 top-1/2 -translate-y-1/2">
+                    <span className="absolute start-4 top-2/3  -translate-y-1/2">
                         <CiMail/>
                     </span>
                 </div>
@@ -71,7 +71,7 @@ export default function ComponentsAuthLoginForm() {
                            value={formValues.password}
                            onChange={handleChange}
                            className=" ps-10"/>
-                    <span className="absolute start-4 top-1/2 -translate-y-1/2">
+                    <span className="absolute start-4 top-2/3 -translate-y-1/2">
                         <CiLock/>
                     </span>
                 </div>
@@ -79,10 +79,8 @@ export default function ComponentsAuthLoginForm() {
             {error && (
                 <>
                     <div
-                        className="flex items-center p-3.5 rounded text-info bg-info-light dark:bg-danger-dark-light">
-                            <span className="ltr:pr-2 rtl:pl-2">
-                                {error}
-                            </span>
+                        className="flex items-center p-3.5 rounded text-red-600">
+                        {error}
                     </div>
                 </>
             )}

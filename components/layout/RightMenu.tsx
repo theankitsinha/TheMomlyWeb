@@ -28,6 +28,7 @@ function RightMenu() {
                                 width={50}
                                 height={50}
                                 src="https://themomly.com/onlyLogo.svg"
+                                priority
                                 alt="Profile picture"
                                 className="w-16 h-16 rounded-full"
                             />

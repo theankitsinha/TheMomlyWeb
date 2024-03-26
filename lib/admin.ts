@@ -32,11 +32,12 @@ export function generateFetchOptions(method: string, requestBody?: object | null
     return options;
 }
 
-export async function login(email: string, password: string, deviceId: string, loginMethod: string) {
+export async function login(email: string, password: string, deviceId: string, tokenUserId: string | null, loginMethod: string) {
     return await fetch(adminApi('web-login'), generateFetchOptions('POST', {
         email: email,
         device_id: deviceId,
         login_method: loginMethod,
+        user_id: tokenUserId ?? null,
         password: password
     }, 'login'));
 }
