@@ -5,9 +5,10 @@ import {v4 as uuidv4} from 'uuid';
 import {extractUserIdAndUUID, uuidValidateV4} from "@/lib/utils";
 import GoogleProvider from "next-auth/providers/google";
 import AppleProvider from "next-auth/providers/apple";
+import {AuthOptions} from "next-auth";
 
 
-export const nextAuthOptions = {
+export const nextAuthOptions: AuthOptions = {
     session: {
         maxAge: 6 * 60 * 60 // 4 hours
     },
