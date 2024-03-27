@@ -24,7 +24,8 @@ export const nextAuthOptions: AuthOptions = {
         }),
         AppleProvider({
             clientId: process.env.APPLE_CLIENT_ID!,
-            clientSecret: process.env.APPLE_CLIENT_SECRET!
+            clientSecret: process.env.APPLE_CLIENT_SECRET!,
+
         }),
         CredentialsProvider({
             name: 'credentials',
@@ -110,12 +111,10 @@ export const nextAuthOptions: AuthOptions = {
     },
     callbacks: {
         async signIn({account, profile, user, email}: { account?: any, profile?: any, user?: any, email?: any }) {
-            console.group("Signup");
-            console.info("Account: " + JSON.stringify(account));
-            console.info("Profile: " + JSON.stringify(profile));
-            console.info("User: " + JSON.stringify(user));
-            console.info("Email: " + JSON.stringify(email));
-            console.groupEnd();
+            console.info("Custom - Account: " + JSON.stringify(account));
+            console.info("Custom - Profile: " + JSON.stringify(profile));
+            console.info("Custom - User: " + JSON.stringify(user));
+            console.info("Custom - Email: " + JSON.stringify(email));
 
             // if (account.provider === "google") {
             //     return profile.email_verified && profile.email.endsWith("@example.com")
