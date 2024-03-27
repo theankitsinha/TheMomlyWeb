@@ -96,13 +96,25 @@ export const nextAuthOptions = {
             },
         }),
     ],
+    cookies: {
+        pkceCodeVerifier: {
+            name: 'next-auth.pkce.code_verifier',
+            options: {
+                httpOnly: true,
+                sameSite: 'none',
+                path: '/',
+                secure: true
+            }
+        }
+    },
+    secret: process.env.NEXTAUTH_SECRET,
     callbacks: {
         async signIn({account, profile, user, email}: { account?: any, profile?: any, user?: any, email?: any }) {
             console.group("Signup");
-            console.log("Account: " + JSON.stringify(account));
-            console.log("Profile: " + JSON.stringify(profile));
-            console.log("User: " + JSON.stringify(user));
-            console.log("Email: " + JSON.stringify(email));
+            console.info("Account: " + JSON.stringify(account));
+            console.info("Profile: " + JSON.stringify(profile));
+            console.info("User: " + JSON.stringify(user));
+            console.info("Email: " + JSON.stringify(email));
             console.groupEnd();
 
             // if (account.provider === "google") {
