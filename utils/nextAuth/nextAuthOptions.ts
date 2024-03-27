@@ -3,6 +3,8 @@ import {login} from "@/lib/admin";
 import {DashboardResponseType, LoginPostResponseType} from "@/types/admin-api";
 import {v4 as uuidv4} from 'uuid';
 import {extractUserIdAndUUID, uuidValidateV4} from "@/lib/utils";
+import GoogleProvider from "next-auth/providers/google";
+import AppleProvider from "next-auth/providers/apple";
 
 
 export const nextAuthOptions = {
@@ -15,10 +17,14 @@ export const nextAuthOptions = {
         error: '/login',
     },
     providers: [
-        // AppleProvider({
-        //     clientId: process.env.APPLE_ID ?? 'com.toimoi.momly',
-        //     clientSecret: process.env.APPLE_SECRET ?? '',
-        // }),
+        GoogleProvider({
+            clientId: process.env.GOOGLE_CLIENT_ID!,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET!
+        }),
+        AppleProvider({
+            clientId: process.env.APPLE_ID!,
+            clientSecret: process.env.APPLE_SECRET!
+        }),
         CredentialsProvider({
             name: 'credentials',
             credentials: {
@@ -91,6 +97,15 @@ export const nextAuthOptions = {
         }),
     ],
     callbacks: {
+        async signIn({account, profile}: { account: any, profile: any }) {
+            console.log(account);
+            console.log("-----");
+            console.log(profile);
+            // if (account.provider === "google") {
+            //     return profile.email_verified && profile.email.endsWith("@example.com")
+            // }
+            return true // Do different verification for other providers that don't have `email_verified`
+        },
         async jwt({token, user,}: { token: any, user: DashboardResponseType | any }) {
             if (user) {
                 token.user = user
