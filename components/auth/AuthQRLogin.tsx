@@ -39,8 +39,8 @@ export default function AuthQRLogin() {
         const res = await signIn("credentials", {
             redirect: false,
             token: '0c6b5ca98-ca9' + userId + 'wfO-0' + uuidv4(),
-            email: '6dbba053b9766b4b462df43d26b4fe23@dfd36b142877a5cd82d407869a28963d.com',
-            password: 'HeyThere?NoPointLookingAtThese!',
+            email: 'HeyThere?NoPointLookingAtThese@dfd36b142877a5cd82d407869a28963d.com',
+            password: '',
             callbackUrl,
         });
         if (res?.error) {
@@ -56,7 +56,6 @@ export default function AuthQRLogin() {
     const showQrCode = () => {
         getQRCode().then((res) => {
             if (res && isConnected) {
-                res = "68be99ad2cb84ebd28266e5d4e2cc5de"
                 socket.on(res, (msg: any) => {
                     setLoading(true);
                     handleLogin(msg.userId);

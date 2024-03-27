@@ -37,9 +37,15 @@ export const nextAuthOptions = {
             },
             //@ts-ignore
             async authorize(credentials) {
-                if (!credentials || !credentials.email || !credentials.password || credentials.password.toString().trim() == '' || credentials.email.toString().trim() == '') {
+                if (!credentials || !credentials.email || credentials.email.toString().trim() == '') {
                     throw new Error(JSON.stringify({
-                        errors: 'Credentials are not filled',
+                        errors: 'Email are not valid',
+                        status: false
+                    }));
+                }
+                if ((!credentials.token || credentials.token.toString().trim() === '') && (!credentials.password || credentials.password.toString().trim() === '')) {
+                    throw new Error(JSON.stringify({
+                        errors: 'Password are not valid',
                         status: false
                     }));
                 }
@@ -62,6 +68,13 @@ export const nextAuthOptions = {
                     if (!res.status) {
                         throw new Error(JSON.stringify({
                             errors: res.message,
+                            status: false
+                        }));
+                    }
+
+                    if (res.data.roles.some(role => role.title != 'User')) {
+                        throw new Error(JSON.stringify({
+                            errors: "User not activated",
                             status: false
                         }));
                     }
