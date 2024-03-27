@@ -98,16 +98,15 @@ export const nextAuthOptions = {
     ],
     cookies: {
         pkceCodeVerifier: {
-            name: 'next-auth.pkce.code_verifier',
+            name: "next-auth.pkce.code_verifier",
             options: {
                 httpOnly: true,
-                sameSite: 'none',
-                path: '/',
-                secure: true
-            }
-        }
+                sameSite: "none",
+                path: "/",
+                secure: process.env.NODE_ENV === 'production',
+            },
+        },
     },
-    secret: process.env.NEXTAUTH_SECRET,
     callbacks: {
         async signIn({account, profile, user, email}: { account?: any, profile?: any, user?: any, email?: any }) {
             console.group("Signup");
