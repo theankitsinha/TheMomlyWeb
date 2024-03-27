@@ -11,19 +11,19 @@ export const nextAuthOptions = {
     session: {
         maxAge: 6 * 60 * 60 // 4 hours
     },
-    pages: {
-        signIn: '/login',
-        signOut: '/logout',
-        error: '/login',
-    },
+    // pages: {
+    //     signIn: '/login',
+    //     signOut: '/logout',
+    //     error: '/login',
+    // },
     providers: [
         GoogleProvider({
             clientId: process.env.GOOGLE_CLIENT_ID!,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET!
         }),
         AppleProvider({
-            clientId: process.env.APPLE_ID!,
-            clientSecret: process.env.APPLE_SECRET!
+            clientId: process.env.APPLE_CLIENT_ID!,
+            clientSecret: process.env.APPLE_CLIENT_SECRET!
         }),
         CredentialsProvider({
             name: 'credentials',
@@ -97,10 +97,14 @@ export const nextAuthOptions = {
         }),
     ],
     callbacks: {
-        async signIn({account, profile}: { account: any, profile: any }) {
-            console.log(account);
-            console.log("-----");
-            console.log(profile);
+        async signIn({account, profile, user, email}: { account?: any, profile?: any, user?: any, email?: any }) {
+            console.group("Signup");
+            console.log("Account: " + JSON.stringify(account));
+            console.log("Profile: " + JSON.stringify(profile));
+            console.log("User: " + JSON.stringify(user));
+            console.log("Email: " + JSON.stringify(email));
+            console.groupEnd();
+
             // if (account.provider === "google") {
             //     return profile.email_verified && profile.email.endsWith("@example.com")
             // }
