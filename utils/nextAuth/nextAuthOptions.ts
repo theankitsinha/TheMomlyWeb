@@ -12,11 +12,11 @@ export const nextAuthOptions: AuthOptions = {
     session: {
         maxAge: 6 * 60 * 60 // 4 hours
     },
-    // pages: {
-    //     signIn: '/login',
-    //     signOut: '/logout',
-    //     error: '/login',
-    // },
+    pages: {
+        signIn: '/login',
+        signOut: '/logout',
+        error: '/login',
+    },
     providers: [
         GoogleProvider({
             clientId: process.env.GOOGLE_CLIENT_ID!,
@@ -106,29 +106,38 @@ export const nextAuthOptions: AuthOptions = {
             },
         }),
     ],
-    cookies: {
-        pkceCodeVerifier: {
-            name: "next-auth.pkce.code_verifier",
-            options: {
-                httpOnly: true,
-                sameSite: "none",
-                path: "/",
-                secure: process.env.NODE_ENV === 'production',
-            },
-        },
-    },
+    // cookies: {
+    //     pkceCodeVerifier: {
+    //         name: 'next-auth.pkce.code_verifier',
+    //         options: {
+    //             httpOnly: true,
+    //             sameSite: 'none',
+    //             path: '/',
+    //             secure: true,
+    //         },
+    //     },
+    //     callbackUrl: {
+    //         name: '__Secure-next-auth.callback-url',
+    //         options: {
+    //             httpOnly: false,
+    //             sameSite: 'none',
+    //             path: '/',
+    //             secure: true,
+    //         },
+    //     },
+    // },
     callbacks: {
-        async signIn({account, profile, user, email}: { account?: any, profile?: any, user?: any, email?: any }) {
-            console.info("Custom - Account: " + JSON.stringify(account));
-            console.info("Custom - Profile: " + JSON.stringify(profile));
-            console.info("Custom - User: " + JSON.stringify(user));
-            console.info("Custom - Email: " + JSON.stringify(email));
-
-            // if (account.provider === "google") {
-            //     return profile.email_verified && profile.email.endsWith("@example.com")
-            // }
-            return true // Do different verification for other providers that don't have `email_verified`
-        },
+        // async signIn({account, profile, user, email}: { account?: any, profile?: any, user?: any, email?: any }) {
+        //     console.info("Custom - Account: " + JSON.stringify(account));
+        //     console.info("Custom - Profile: " + JSON.stringify(profile));
+        //     console.info("Custom - User: " + JSON.stringify(user));
+        //     console.info("Custom - Email: " + JSON.stringify(email));
+        //
+        //     // if (account.provider === "google") {
+        //     //     return profile.email_verified && profile.email.endsWith("@example.com")
+        //     // }
+        //     return true // Do different verification for other providers that don't have `email_verified`
+        // },
         async jwt({token, user,}: { token: any, user: DashboardResponseType | any }) {
             if (user) {
                 token.user = user
