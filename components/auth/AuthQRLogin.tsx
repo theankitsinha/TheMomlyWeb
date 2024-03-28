@@ -13,7 +13,6 @@ export default function AuthQRLogin() {
 
     const [isLoading, setLoading] = useState(false);
     const [qrCode, setQRCode] = useState<string>();
-
     const {isConnected, socket} = useSocket();
     const router = useRouter();
 
@@ -69,8 +68,9 @@ export default function AuthQRLogin() {
         showQrCode();
         setInterval(() => {
             setLoading(true);
-            showQrCode()
-        }, 100000);
+            showQrCode();
+            setLoading(false)
+        }, 30000);
         setLoading(false)
     }, [isConnected])
     return (
@@ -88,7 +88,6 @@ export default function AuthQRLogin() {
             <span className="font-semibold">Log in with QR Code
                 <span className={cn(isConnected ? 'text-green-600' : 'text-red-600')}> ●</span>
             </span>
-
             <div className="text-base text-center"
             >Scan this with the <strong className="text-primary">Momly Mobile
                 app</strong> to log in instantly.
