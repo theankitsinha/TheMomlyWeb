@@ -1,12 +1,54 @@
 import CredentialsProvider from "next-auth/providers/credentials";
 import {login} from "@/lib/admin";
-import {DashboardResponseType, LoginPostResponseType} from "@/types/admin-api";
+import {LoginPostResponseType, UserDetailsResponse} from "@/types/admin-api";
 import {v4 as uuidv4} from 'uuid';
 import {extractUserIdAndUUID, uuidValidateV4} from "@/lib/utils";
 import GoogleProvider from "next-auth/providers/google";
 import AppleProvider from "next-auth/providers/apple";
-import {AuthOptions} from "next-auth";
+import {Account, AuthOptions, Profile, User} from "next-auth";
+import {generateAppleClientSecret} from "@/lib/apple";
 
+type handleAdminLoginProps = {
+    email: string,
+    password: string,
+    tokenUserId: string | null,
+    loginMethod: string,
+    name: string | null,
+}
+
+async function handleAdminLoginResponse({email, password, tokenUserId, loginMethod, name}: handleAdminLoginProps) {
+    const deviceId = uuidv4();
+    const response = await login(
+        email,
+        password,
+        deviceId,
+        name,
+        tokenUserId,
+        loginMethod);
+    if (response.ok) {
+        const res: LoginPostResponseType = await response.json();
+        if (!res.status) {
+            throw new Error(JSON.stringify({
+                errors: res.message,
+                status: false
+            }));
+        }
+        if (!(res.data.roles.some(role => role.title === 'User'))) {
+            throw new Error(JSON.stringify({
+                errors: "User doesnt have access to this app, Please contact Momly Team",
+                status: false
+            }));
+        }
+        return res.data;
+    } else {
+        const errorMessage = await response.json()
+        console.log("Auth error!", errorMessage)
+        throw new Error(JSON.stringify({
+            errors: errorMessage.message ?? 'Invalid credentials',
+            status: false
+        }));
+    }
+}
 
 export const nextAuthOptions: AuthOptions = {
     session: {
@@ -20,11 +62,23 @@ export const nextAuthOptions: AuthOptions = {
     providers: [
         GoogleProvider({
             clientId: process.env.GOOGLE_CLIENT_ID!,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET!
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+            authorization: {
+                params: {
+                    prompt: "consent",
+                    access_type: "offline",
+                    response_type: "code"
+                }
+            },
         }),
         AppleProvider({
             clientId: process.env.APPLE_CLIENT_ID!,
-            clientSecret: process.env.APPLE_CLIENT_SECRET!,
+            clientSecret: await generateAppleClientSecret({
+                clientId: process.env.APPLE_CLIENT_ID!,
+                keyId: process.env.APPLE_KEY_ID!,
+                teamId: process.env.APPLE_TEAM_ID!,
+                privateKey: process.env.APPLE_PRIVATE_KEY!,
+            }),
             authorization: {
                 params: {
                     response_type: 'code id_token',
@@ -33,7 +87,6 @@ export const nextAuthOptions: AuthOptions = {
                     client_id: process.env.APPLE_CLIENT_ID,
                 },
             },
-
         }),
         CredentialsProvider({
             name: 'credentials',
@@ -65,7 +118,6 @@ export const nextAuthOptions: AuthOptions = {
                         status: false
                     }));
                 }
-                const deviceId = uuidv4();
                 let tokenUserId = null;
                 if (credentials.token) {
                     const {userId, uuid} = extractUserIdAndUUID(credentials.token);
@@ -73,79 +125,62 @@ export const nextAuthOptions: AuthOptions = {
                         tokenUserId = userId;
                     }
                 }
-                const response = await login(
-                    credentials.email,
-                    credentials.password,
-                    deviceId,
-                    tokenUserId,
-                    tokenUserId ? "qrcode" : "password");
-                if (response.ok) {
-                    const res: LoginPostResponseType = await response.json();
-                    if (!res.status) {
-                        throw new Error(JSON.stringify({
-                            errors: res.message,
-                            status: false
-                        }));
-                    }
-
-                    if (res.data.roles.some(role => role.title != 'User')) {
-                        throw new Error(JSON.stringify({
-                            errors: "User not activated",
-                            status: false
-                        }));
-                    }
-                    return res.data;
-                } else {
-                    const errorMessage = await response.json()
-                    console.log("Auth error!", errorMessage)
-                    throw new Error(JSON.stringify({
-                        errors: errorMessage.message ?? 'Invalid credentials',
-                        status: false
-                    }));
-                }
+                return await handleAdminLoginResponse({
+                    email: credentials.email,
+                    password: credentials.password,
+                    name: '',
+                    tokenUserId: tokenUserId,
+                    loginMethod: tokenUserId ? "qrcode" : "password"
+                });
             },
         }),
     ],
-    // cookies: {
-    //     pkceCodeVerifier: {
-    //         name: 'next-auth.pkce.code_verifier',
-    //         options: {
-    //             httpOnly: true,
-    //             sameSite: 'none',
-    //             path: '/',
-    //             secure: true,
-    //         },
-    //     },
-    //     callbackUrl: {
-    //         name: '__Secure-next-auth.callback-url',
-    //         options: {
-    //             httpOnly: false,
-    //             sameSite: 'none',
-    //             path: '/',
-    //             secure: true,
-    //         },
-    //     },
-    // },
+    cookies: {
+        pkceCodeVerifier: {
+            name: 'next-auth.pkce.code_verifier',
+            options: {
+                httpOnly: true,
+                sameSite: 'none',
+                path: '/',
+                secure: true,
+            },
+        },
+    },
     callbacks: {
-        // async signIn({account, profile, user, email}: { account?: any, profile?: any, user?: any, email?: any }) {
-        //     console.info("Custom - Account: " + JSON.stringify(account));
-        //     console.info("Custom - Profile: " + JSON.stringify(profile));
-        //     console.info("Custom - User: " + JSON.stringify(user));
-        //     console.info("Custom - Email: " + JSON.stringify(email));
-        //
-        //     // if (account.provider === "google") {
-        //     //     return profile.email_verified && profile.email.endsWith("@example.com")
-        //     // }
-        //     return true // Do different verification for other providers that don't have `email_verified`
-        // },
-        async jwt({token, user,}: { token: any, user: DashboardResponseType | any }) {
+        async jwt({
+                      token,
+                      user,
+                      account,
+                      profile,
+                      trigger,
+                      isNewUser,
+                  }: {
+            token: any,
+            user: UserDetailsResponse | User,
+            account: Account | null;
+            profile?: Profile | undefined;
+            trigger?: string | undefined;
+            isNewUser?: boolean | undefined;
+        }) {
+            if (account && profile && (account.provider === "google" || account.provider === 'apple') && account.type === 'oauth') {
+                user = await handleAdminLoginResponse({
+                    email: profile.email!,
+                    password: '',
+                    name: profile.name!,
+                    tokenUserId: null,
+                    loginMethod: account.provider === "google" ? "google.com" : "apple.com"
+                });
+            }
             if (user) {
                 token.user = user
                 token.accessToken = user.accessToken
             }
             return token;
         },
-        async session({session, token}: { session: any, token: any }) {
+        async session({session, token}: {
+            session: any;
+            token: any;
+        }) {
             session.accessToken = token.accessToken
             session.user = token.user
             return session

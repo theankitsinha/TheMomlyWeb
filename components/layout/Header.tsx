@@ -72,7 +72,7 @@ function Header() {
                                 className="inline-flex items-center justify-center p-1 rounded-full hover:bg-gray-200 dark:hover:bg-dark-third mx-1"
                             >
                                 <Image
-                                    src={session.user.profile.avatar}
+                                    src={session.user.image}
                                     width={40}
                                     height={40}
                                     alt={session.user.name ?? ''}

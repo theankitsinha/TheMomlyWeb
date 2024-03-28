@@ -78,7 +78,7 @@ export default function AuthQRLogin() {
                 <Image src={(qrCode && !isLoading) ? qrCode : "/assets/onlyLogo.svg"} width={100} height={100}
                        alt={qrCode ?? 'momly-'}
                        priority
-                       className="h-60 w-60"/>
+                       className="h-30 w-30 md:h-52 md:w-52"/>
 
             </div>
             <span className="font-semibold">Log in with QR Code</span>

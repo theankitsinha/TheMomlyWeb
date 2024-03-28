@@ -1,10 +1,10 @@
 import {Session} from "next-auth/next"
-import {DashboardResponseType} from "@/types/admin-api";
+import {UserDetailsResponse} from "@/types/admin-api";
 
 declare module "next-auth" {
     interface Session {
         accessToken: string
-        user: DashboardResponseType & Session["user"]
+        user: UserDetailsResponse & Session["user"]
     }
 
     interface User {

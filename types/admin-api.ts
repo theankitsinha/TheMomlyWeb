@@ -10,90 +10,6 @@ export type MeetGetResponseType = {
     data: MeetPaginatedResponseType
 }
 
-export type LoginPostResponseType = {
-    status: boolean
-    message: string
-    data: DashboardResponseType
-}
-
-export type DashboardResponseType = {
-    id: number
-    firebase_uid: string
-    name: string
-    username_visibility: boolean
-    username: string
-    phone_extension: string
-    phone_number: any
-    is_approved: boolean
-    email: string
-    created_at: string
-    accessToken: string
-    login: Login
-    profile: Profile
-    isSubscriptionUser: boolean
-    children: any[]
-    roles: Role[]
-}
-
-export interface Login {
-    user_id: number
-    device_id: string
-    notification_token: any
-    device_type: string
-    login_method: string
-    ip: string
-    updated_at: string
-    created_at: string
-    id: number
-}
-
-export interface Profile {
-    id: number
-    bio: string
-    bio_link: string
-    pincode: string
-    gender: string
-    avatar: string
-    avatar_thumbnail: string
-    lat: string
-    long: string
-    state_of_mind: string
-    reason_to_join: string
-    describes_me: any
-    address: string
-    sub_district: string
-    district: string
-    city: string
-    state: string
-    country: string
-    country_code: string
-    dob: string
-    languages: string[]
-    education: string
-    work: string
-    hometown: string
-    hobbies: any
-    updated_at: string
-    user_id: number
-    current_stage_id: number
-    children_stage_id: any
-}
-
-export interface Role {
-    id: number
-    title: string
-    created_at?: string
-    updated_at?: string
-    deleted_at: any
-    pivot: Pivot
-}
-
-export interface Pivot {
-    user_id: number
-    role_id: number
-}
-
-
 export interface MeetPaginatedResponseType {
     data: Meet[]
     pagination: Pagination
@@ -177,5 +93,39 @@ export type Meet = {
 export interface Children {
     dob: string
     age_in_years: number
+}
+
+
+//.file
+
+export type LoginPostResponseType = {
+    status: boolean
+    message: string
+    data: UserDetailsResponse
+}
+
+export type UserDetailsResponse = {
+    accessToken: string
+    wasRecentlyCreated: boolean
+    isApproved: boolean
+    profileExists: boolean
+    roles: Role[]
+    isSubscriptionUser: boolean
+    id: number
+    name: string
+    username: string
+    email: string
+    phoneNumber: any
+    phoneExtension: string
+    deviceId: string
+    lat: string
+    long: string
+    stageId: number
+    image: string
+}
+
+export interface Role {
+    id: number
+    title: string
 }
 

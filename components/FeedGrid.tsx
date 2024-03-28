@@ -79,26 +79,24 @@ const FeedGrid: React.FC = () => {
                 <FeedSkeletonCard/>
             ) : (
                 <div ref={containerRef}>
-                    {
-                        feedItems.map((singleFeed, index) => {
-                            return (
-                                <motion.div
-                                    key={"feedItem:" + singleFeed.id}
-                                    initial={{opacity: 0, y: 20, scale: 1.2}}
-                                    animate={{opacity: 1, y: 0, scale: 1}}
-                                    transition={{
-                                        duration: 0.4,
-                                        delay: index * 0.1,
-                                    }}
-                                >
-                                    <SingleFeed
-                                        key={"feedItem:" + singleFeed.id}
-                                        feed={singleFeed}
-                                    />
-                                </motion.div>
-                            )
-                        })
-                    }
+                    {feedItems.map((singleFeed, index) => {
+                        return (
+                            <motion.div
+                                key={"animationMotionDiv:" + singleFeed.id + index}
+                                initial={{opacity: 0, y: 20, scale: 1.2}}
+                                animate={{opacity: 1, y: 0, scale: 1}}
+                                transition={{
+                                    duration: 0.4,
+                                    delay: index * 0.1,
+                                }}
+                            >
+                                <SingleFeed
+                                    key={"singleFeedItem:" + singleFeed.id}
+                                    feed={singleFeed}
+                                />
+                            </motion.div>
+                        )
+                    })}
                 </div>
             )}
             {isLoading && (

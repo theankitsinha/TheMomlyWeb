@@ -33,7 +33,7 @@ const CoverLogin = () => {
                                         We're so excited to see you again!
                                     </p>
                                 </div>
-                                <div className="mx-auto mt-10">
+                                <div className="mx-auto mt-2">
                                     <ComponentsAuthLoginForm/>
                                 </div>
                             </div>

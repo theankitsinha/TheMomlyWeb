@@ -6,7 +6,9 @@ import {BiCamera, BiPoll} from "react-icons/bi";
 
 
 function AddNewFeed() {
-    const {data: session, status} = useSession();
+    const {data: session, status} = useSession({
+        required: true,
+    });
     const [body, setBody] = useState();
     const filePickerRef = useRef<HTMLInputElement>(null);
     const [imageToPost, setImageToPost] = useState(null);
@@ -33,7 +35,7 @@ function AddNewFeed() {
             <div className="px-4 mt-4 shadow rounded-lg bg-white dark:bg-dark-second">
                 <div className="p-2 border-b border-gray-300 dark:border-dark-third flex space-x-4">
                     <Image
-                        src={session?.user.profile.avatar}
+                        src={session?.user.image}
                         className="w-10 h-10 rounded-full"
                         width={40}
                         height={40}
