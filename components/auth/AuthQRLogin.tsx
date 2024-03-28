@@ -79,7 +79,8 @@ export default function AuthQRLogin() {
                      {cn("rounded-2xl bg-white border border-dashed p-3 mb-2",
                          isConnected ? 'border-green-700' : 'border-red-700'
                      )}>
-                <Image src={(qrCode && !isLoading) ? qrCode : "/assets/onlyLogo.svg"} width={100} height={100}
+                <Image src={(qrCode && !isLoading && isConnected) ? qrCode : "/assets/onlyLogo.svg"} width={100}
+                       height={100}
                        alt={qrCode ?? 'momly-'}
                        priority
                        className="h-30 w-30 md:h-52 md:w-52"/>
