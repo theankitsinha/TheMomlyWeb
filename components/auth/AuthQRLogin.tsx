@@ -7,6 +7,7 @@ import QRCode from "qrcode";
 import {signIn} from "next-auth/react";
 import {useRouter, useSearchParams} from "next/navigation";
 import {v4 as uuidv4} from "uuid";
+import {cn} from "@/lib/utils";
 
 export default function AuthQRLogin() {
 
@@ -74,14 +75,20 @@ export default function AuthQRLogin() {
     }, [isConnected])
     return (
         <>
-            <div className="rounded-2xl bg-white border border-dashed border-primary p-3 mb-2">
+            <div className=
+                     {cn("rounded-2xl bg-white border border-dashed p-3 mb-2",
+                         isConnected ? 'border-green-700' : 'border-red-700'
+                     )}>
                 <Image src={(qrCode && !isLoading) ? qrCode : "/assets/onlyLogo.svg"} width={100} height={100}
                        alt={qrCode ?? 'momly-'}
                        priority
                        className="h-30 w-30 md:h-52 md:w-52"/>
 
             </div>
-            <span className="font-semibold">Log in with QR Code</span>
+            <span className="font-semibold">Log in with QR Code
+                <span className={cn(isConnected ? 'text-green-600' : 'text-red-600')}> ●</span>
+            </span>
+
             <div className="text-base text-center"
             >Scan this with the <strong className="text-primary">Momly Mobile
                 app</strong> to log in instantly.

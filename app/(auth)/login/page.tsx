@@ -1,5 +1,5 @@
 'use client'
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import ComponentsAuthLoginForm from "@/components/auth/components-auth-login-form";
 import {SocketProvider} from "@/components/SocketProvider";
 import AuthQRLogin from "@/components/auth/AuthQRLogin";
@@ -12,6 +12,24 @@ const CoverLogin = () => {
     if (status === 'authenticated') {
         router.push('/');
     }
+    const [width, setWidth] = useState<number>();
+
+    function handleWindowSizeChange() {
+        setWidth(window.innerWidth);
+    }
+
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+            setWidth(window.innerWidth);
+            window.addEventListener('resize', handleWindowSizeChange);
+            return () => {
+                window.removeEventListener('resize', handleWindowSizeChange);
+            }
+        }
+
+    }, []);
+
+    const isMobile = width! <= 768;
     return (
         <>
             <div
@@ -37,11 +55,13 @@ const CoverLogin = () => {
                                     <ComponentsAuthLoginForm/>
                                 </div>
                             </div>
-                            <div className="flex flex-col items-center justify-center p-2">
-                                <SocketProvider>
-                                    <AuthQRLogin/>
-                                </SocketProvider>
-                            </div>
+                            {!isMobile && (
+                                <div className="flex flex-col items-center justify-center p-2">
+                                    <SocketProvider>
+                                        <AuthQRLogin/>
+                                    </SocketProvider>
+                                </div>
+                            )}
                         </div>
 
                         <div className="mt-5">

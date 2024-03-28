@@ -111,7 +111,8 @@ export default function ComponentsAuthLoginForm() {
                     </div>
                 </div>
                 <div className="grid md:grid-cols-2 gap-2">
-                    <Button className="w-full" variant="outline" type="button" disabled={loading}>
+                    <Button className="w-full" variant="outline" type="button" disabled={loading}
+                            onClick={() => signIn('google')}>
                         {loading ? (
                             <PiSpinnerThin className="mr-2 h-4 w-4 animate-spin"/>
                         ) : (
@@ -119,7 +120,8 @@ export default function ComponentsAuthLoginForm() {
                         )}
                         Google
                     </Button>
-                    <Button className="w-full" variant="outline" type="button" disabled={loading}>
+                    <Button className="w-full" variant="outline" type="button" disabled={loading}
+                            onClick={() => signIn('apple')}>
                         {loading ? (
                             <PiSpinnerThin className="mr-2 h-4 w-4 animate-spin"/>
                         ) : (
